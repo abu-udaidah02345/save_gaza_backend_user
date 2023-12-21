@@ -9,10 +9,11 @@ module.exports.verifyToken = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET);
     req.user = decoded.userId;
     next();
   } catch (error) {
+    console.error('Token verification error:', error);
     res.status(401).json({ error: 'Unauthorized - Invalid token' });
   }
 };
